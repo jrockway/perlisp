@@ -27,7 +27,7 @@ sub lookup {
     return $self->_lookup($name)
         if $self->has_binding($name);
 
-    return $self->parent->_lookup($name, @_)
+    return $self->parent->lookup($name, @_)
         if $self->has_parent;
 
     return;
