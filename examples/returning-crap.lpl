@@ -1,20 +1,28 @@
-(method get-hashref ()
-        {}) ;; hashref
 
-(method get-arrayref ()
-        '(1 2 3)) ;; arrayref
+(sub get-hashref ()
+  "This returns an hashref (the kind that Perl likes)."
+  {:a 1 :b 2 :oh-hai 42}) ;; hashref
 
-(method get-multiple-values ()
-        (values 1 2 3))
+(sub get-arrayref ()
+  "This returns an arrayref (the kind of list that Perl knows and
+  loves)."
+  '(1 2 3)) ;; arrayref
 
-(method get-multiple-values-1 ()
-        (multiple-value-return '(1 2 3)))
+(sub get-multiple-values ()
+  "This returns a a 'list' to Perl, as in:
+    my ($a, $b, $c) = get_multiple_values();"
+  (values 1 2 3))
 
-(method use-multiple-values ()
-        (let ((list (in-list-context foo)))
-          (in-list-context some-perl-function 1 2 3)
-          (in-scalar-context some-perl-function 1 2 3)
-          (in-void-context some-perl-function 1 2 3)
-          list))
+(sub get-multiple-values-1 ()
+  "This converts a lisp list to a perl list (NOT arrayref)."
+  (multiple-value-return '(1 2 3)))
 
-
+(sub use-multiple-values ()
+  "Some examples of forcing Perl contexts.  By default,
+the function's context is dependent on the generated code.  (Just like
+Perl.)"
+  (let ((list (in-list-context foo)))
+    (in-list-context some-perl-function 1 2 3)
+    (in-scalar-context some-perl-function 1 2 3)
+    (in-void-context some-perl-function 1 2 3)
+    list))
