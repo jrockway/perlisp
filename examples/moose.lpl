@@ -19,11 +19,10 @@
         })
 
     (method lookup (&invocant this name)
-       (cond (<has-binding this name> <_lookup this name>)
-             (<has-parent this> <lookup <parent this> name>)))
+       (cond ([has-binding this name] [_lookup this name])
+             ([has-parent this] [lookup [parent this] name])))
 
     (method subenv (&rest params)
-       (let ((subenv <new Perlisp::Environment :parent self>))
-           <bind subenv params>
+       (let ((subenv [new Perlisp::Environment :parent self]))
+           [bind subenv params]
            subenv)))
-
