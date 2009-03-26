@@ -1,0 +1,20 @@
+(use List::Util reduce sum)
+
+[now DateTime::] ; automatically requires DateTime
+
+[new DateTime:: :hour 12 :minute 5 :second 10]
+
+[get-all-methods [meta DateTime::]]
+
+(let ((class (randomly-pick Foo:: Bar::)))
+    [new class])
+
+; do {
+;     my $class = rand(1) < 0.5 ? Foo:: : Bar::;
+;     Class::MOP::load_class($class);
+;     $class->new;
+; }
+
+(method wait ((dur DateTime::Duration::))
+    [set-time (+ dur [time self])])
+
