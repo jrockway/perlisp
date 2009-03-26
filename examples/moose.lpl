@@ -6,7 +6,7 @@
     (has parent
         :is        ro
         :isa       Perlisp::Environment
-        :predicate has_parent)
+        :predicate has-parent)
 
     (has bindings
         :is       ro
@@ -15,12 +15,15 @@
         :provides {
             :get    _lookup
             :set    bind
-            :exists has_binding
+            :exists has-binding
         })
 
     (method lookup (&invocant this name)
-       ... this ...)
+       (cond (<has-binding this name> <_lookup this name>)
+             (<has-parent this> <lookup <parent this> name>)))
 
     (method subenv (&rest params)
-       ... self ...))
+       (let ((subenv <new Perlisp::Environment :parent self>))
+           <bind subenv params>
+           subenv)))
 
