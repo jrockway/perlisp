@@ -1,0 +1,26 @@
+(define-class Perlisp::Environment
+    (extends Perlisp::Object)
+    (with Perlisp::Role::Objective)
+    (immutable t)
+
+    (has parent
+        :is        ro
+        :isa       Perlisp::Environment
+        :predicate has_parent)
+
+    (has bindings
+        :is       ro
+        :isa      HashRef
+        :default  {}
+        :provides {
+            :get    _lookup
+            :set    bind
+            :exists has_binding
+        })
+
+    (method lookup (&invocant this name)
+       ... this ...)
+
+    (method subenv (&rest params)
+       ... self ...))
+
