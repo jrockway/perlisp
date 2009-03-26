@@ -1,0 +1,20 @@
+(method get-hashref ()
+        {}) ;; hashref
+
+(method get-arrayref ()
+        '(1 2 3)) ;; arrayref
+
+(method get-multiple-values ()
+        (values 1 2 3))
+
+(method get-multiple-values-1 ()
+        (multiple-value-return '(1 2 3)))
+
+(method use-multiple-values ()
+        (let ((list (in-list-context foo)))
+          (in-list-context some-perl-function 1 2 3)
+          (in-scalar-context some-perl-function 1 2 3)
+          (in-void-context some-perl-function 1 2 3)
+          list))
+
+
