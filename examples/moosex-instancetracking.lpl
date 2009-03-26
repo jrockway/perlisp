@@ -1,0 +1,46 @@
+(define-package MooseX::InstanceTracking
+  (define-global VERSION "0.03")
+
+  [setup_import_methods Moose::Exporter::]
+
+  (sub init_meta (class &rest args)
+      (let ((parameters (->hash args)))
+          [init_meta Moose:: parameters]
+
+          (Moose::Util::MetaRole::apply_metaclass_roles
+              :for_class (get-indexed parameters :for_class)
+              :metaclass_roles '(MooseX::InstanceTracking::Role::Class::)
+              :constructor_class_roles '(MooseX::InstanceTracking::Role::Constructor::)))))
+
+(define-role MooseX::InstanceTracking::Role::Class
+    (has _instances
+        :isa Set::Object::Weak::
+        :default [new Set::Object::Weak::]
+        :lazy
+        :handles ((instances         members)
+                  (_track_instance   insert)
+                  (_untrack_instance remove)))
+
+    (method get-all-instances ()
+        (map <[instances [meta _]]> (cons [name self] [subclasses self])))
+
+    (around (construct-instance clone-instance) (&rest args)
+        (let ((instance (call-next-method)))
+            [_track-instance self instance]
+            instance))
+
+    (after rebless-instance (instance)
+        [_track-instance self instance])
+
+    (before rebless-instance-away (instance)
+        [_untrack-instance self instance]))
+
+(define-role MooseX::InstanceTracking::Role::Constructor
+    (around _generate-instance (var class-var)
+        (let ((code-fragment (call-next-method)))
+            (cat code-fragment
+                (ast->string
+                    `[_track-instance
+                        [initialize Moose::Meta::Class:: ,class-var]
+                        ,var])))))
+
